@@ -7,9 +7,9 @@ venv/
 .ipynb_checkpoints/
 
 # Generated data + trained models
-data/processed/*.parquet
-models/prophet/*.model
-models/xgboost/*.model
+#data/processed/*.parquet
+#models/prophet/*.model
+#models/xgboost/*.model
 
 # IDE
 .vscode/
