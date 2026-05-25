@@ -108,9 +108,27 @@ def _load_models(path: Path) -> Dict[str, Prophet]:
             path.name,
             exc,
         )
-        train_all()
-        with path.open("rb") as f:
-            return pickle.load(f)
+        try:
+            train_all()
+        except Exception as rebuild_exc:
+            logging.error(
+                "Unable to rebuild Prophet models from parquet files: %s",
+                rebuild_exc,
+                exc_info=True,
+            )
+            return {}
+
+        try:
+            with path.open("rb") as f:
+                return pickle.load(f)
+        except Exception as reload_exc:
+            logging.error(
+                "Unable to reload rebuilt Prophet models from %s: %s",
+                path.name,
+                reload_exc,
+                exc_info=True,
+            )
+            return {}
 
 
 def forecast_group(
