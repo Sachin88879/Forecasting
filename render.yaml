@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: insurance-forecast-api
+    runtime: docker
+    plan: starter
+    region: oregon
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8000
+    dockerfilePath: ./Dockerfile

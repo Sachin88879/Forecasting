@@ -1,0 +1,19 @@
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.env
+.ipynb_checkpoints/
+
+# Generated data + trained models
+data/processed/*.parquet
+models/prophet/*.model
+models/xgboost/*.model
+
+# IDE
+.vscode/
+.idea/
+
+# pytest
+.pytest_cache/
