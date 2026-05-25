@@ -8,6 +8,7 @@ Run from the project root with:
 
 from __future__ import annotations
 
+import logging
 import pickle
 from pathlib import Path
 from typing import Dict, List
@@ -95,8 +96,21 @@ def train_all() -> None:
 # Forecasting
 # ---------------------------------------------------------------------------
 def _load_models(path: Path) -> Dict[str, Prophet]:
-    with path.open("rb") as f:
-        return pickle.load(f)
+    try:
+        with path.open("rb") as f:
+            return pickle.load(f)
+    except Exception as exc:
+        # The saved Prophet models can depend on the pandas version in use when
+        # they were pickled. If loading fails due to dtype/signature mismatch,
+        # retrain from the source parquet data and write fresh model bundles.
+        logging.warning(
+            "Failed to load Prophet models from %s: %s. Rebuilding models from parquet files.",
+            path.name,
+            exc,
+        )
+        train_all()
+        with path.open("rb") as f:
+            return pickle.load(f)
 
 
 def forecast_group(
